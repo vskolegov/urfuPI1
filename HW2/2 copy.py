@@ -25,4 +25,5 @@ def text2toxicity(text, aggregate=True):
     return proba
 
 
-st.write(text2toxicity('text_from_st', True))
+#st.write(text2toxicity('text_from_st', True))
+st.write("еукс")
