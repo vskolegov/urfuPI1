@@ -2,7 +2,7 @@ import io
 import torch
 import streamlit as st
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
-st.title('title1')
+st.title('Определятор токсичности текста')
 
 text_from_st = st.text_input('Текст') #ввод пользователя
 
@@ -23,9 +23,7 @@ def text2toxicity(text, aggregate=True):
     return proba
 
 def m(Text):
-    st.write('получилось :',text2toxicity(Text)) 
- #   st.write('получилось :') 
+    st.write('Токсичность (чем больше, тем токсичнее) :',text2toxicity(Text)) 
 
 m(text_from_st)
-#st.write(text2toxicity('text_from_st', True))
-#st.write("еукс")
+
