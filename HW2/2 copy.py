@@ -24,4 +24,5 @@ def text2toxicity(text, aggregate=True):
         return 1 - proba.T[0] * (1 - proba.T[-1])
     return proba
 
-text2toxicity('text_from_st', True)
+
+st.write(text2toxicity('text_from_st', True))
