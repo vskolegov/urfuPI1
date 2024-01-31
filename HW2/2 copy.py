@@ -23,8 +23,8 @@ def text2toxicity(text, aggregate=True):
     return proba
 
 def m(Text):
- #   st.write('получилось :',text2toxicity(Text)) 
-    st.write('получилось :') 
+    st.write('получилось :',text2toxicity(Text)) 
+ #   st.write('получилось :') 
 
 m(text_from_st)
 #st.write(text2toxicity('text_from_st', True))
