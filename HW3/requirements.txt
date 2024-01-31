@@ -1,8 +1,0 @@
-tensorflow-cpu
-sentencepiece
-transformers
-streamlit
-uvicorn
-fastapi
-streamlit
-httpx
