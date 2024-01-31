@@ -24,6 +24,9 @@ def text2toxicity(text, aggregate=True):
         return 1 - proba.T[0] * (1 - proba.T[-1])
     return proba
 
+def model(Text):
+    st.write('получилось :',text2toxicity(Text)) 
 
+model(text_from_st)
 #st.write(text2toxicity('text_from_st', True))
-st.write("еукс")
+#st.write("еукс")
