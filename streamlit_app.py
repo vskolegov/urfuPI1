@@ -6,6 +6,14 @@ import streamlit as st
 tokenizer = BertTokenizerFast.from_pretrained('blanchefort/rubert-base-cased-sentiment-rusentiment')
 model = AutoModelForSequenceClassification.from_pretrained('blanchefort/rubert-base-cased-sentiment-rusentiment', return_dict=True)
 
+sentiment_labels = {
+    0: "без эмоций",
+    1: "радость",
+    2: "грусть",
+    3: "сюрприз",
+    4: "страх",
+    5: "злость"
+}
 
 def predict(text):
     inputs = tokenizer(text, max_length=512, padding=True, truncation=True, return_tensors='pt')
@@ -24,7 +32,8 @@ def main():
             st.write(f"Найденные эмоции: {predicted_class}")
             st.write("вероятность:")
             for i, prob in enumerate(probabilities):
-                st.write(f"{i}: {prob * 100:.2f}%")
+                sentiment_label = sentiment_labels[i]
+                st.write(f"{sentiment_label}: {prob * 100:.2f}%")
 
 
 if __name__ == "__main__":
