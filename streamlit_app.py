@@ -31,5 +31,3 @@ def to_model(Text):
         st.write(f"{emotion}: {percentage:.2f}%")
 
 to_model(text_from_st)
-
-to_model(text_from_st)
