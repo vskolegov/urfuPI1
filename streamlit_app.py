@@ -3,8 +3,7 @@ from transformers import AutoModelForSequenceClassification
 from transformers import BertTokenizerFast
 import streamlit as st
 
-st.title('Определение семантики текста')
-text_from_st = st.text_input('Текст')
+st.title('Определение эмоциональности текста')
 
 tokenizer = BertTokenizerFast.from_pretrained('blanchefort/rubert-base-cased-sentiment-rusentiment')
 model = AutoModelForSequenceClassification.from_pretrained('blanchefort/rubert-base-cased-sentiment-rusentiment', return_dict=True)
@@ -19,11 +18,11 @@ def predict(text):
     predicted_label = torch.argmax(predicted_probabilities).item()  # Convert to a single int value
     return predicted_label, predicted_probabilities
 
+text_from_st = st.text_input('Текст')
 
-def to_model(Text):
+if st.button("Predict"):
+    predicted_label, predicted_probabilities = predict(text_from_st)
     LABELS = ['без эмоций', 'радость', 'грусть', 'сюрприз', 'страх', 'злость']
-    predicted_label, predicted_probabilities = predict(Text)
-
     top_emotions = torch.argsort(predicted_probabilities, descending=True)
     thresholds = [0.90, 0.75, 0.50, 0.25]
     top_emotions_with_percentage = []
@@ -38,9 +37,6 @@ def to_model(Text):
             top_emotions_with_percentage.append((emotion, percentage))
         elif percentage >= thresholds[3] and len(top_emotions_with_percentage) < 4:
             top_emotions_with_percentage.append((emotion, percentage))
-
-    st.write('Распознанные емоции:')
+    st.write("Найденные эммоции в тексте:")
     for emotion, percentage in top_emotions_with_percentage:
         st.write(f"{emotion}: {percentage:.2f}%")
-
-to_model(text_from_st)
