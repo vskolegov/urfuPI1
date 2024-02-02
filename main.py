@@ -16,14 +16,32 @@ def predict(text):
     return predicted_label, predicted_probabilities
 
 
-text_input = 'Ты мне не нравишься. Я тебя не люблю'
-LABELS = ['без эмоций', 'радость', 'грусть', 'сюрприз', 'страх', 'злость']
+text_input = 'Нифига себе, неужели так тоже бывает!'
 
 predicted_label, predicted_probabilities = predict(text_input)
 
-top_3_emotions = torch.argsort(predicted_probabilities, descending=True)[:3]
-top_3_emotions_with_percentage = [(LABELS[i], predicted_probabilities[i].item() * 100) for i in top_3_emotions]
+LABELS = ['без эмоций', 'радость', 'грусть', 'сюрприз', 'страх', 'злость']
 
-print("Распознанные емоции:")
-for emotion, percentage in top_3_emotions_with_percentage:
+top_emotions = torch.argsort(predicted_probabilities, descending=True)
+
+# Define thresholds for including emotions
+thresholds = [0.90, 0.75, 0.50, 0.25]
+
+# Retrieve top emotions with percentages based on thresholds
+top_emotions_with_percentage = []
+for i in top_emotions:
+    emotion = LABELS[i]
+    percentage = predicted_probabilities[i].item() * 100
+    if percentage >= thresholds[0]:
+        top_emotions_with_percentage.append((emotion, percentage))
+    elif percentage >= thresholds[1] and len(top_emotions_with_percentage) < 2:
+        top_emotions_with_percentage.append((emotion, percentage))
+    elif percentage >= thresholds[2] and len(top_emotions_with_percentage) < 3:
+        top_emotions_with_percentage.append((emotion, percentage))
+    elif percentage >= thresholds[3] and len(top_emotions_with_percentage) < 4:
+        top_emotions_with_percentage.append((emotion, percentage))
+
+# Print the top emotions with percentages
+print("Top emotions with percentages:")
+for emotion, percentage in top_emotions_with_percentage:
     print(f"{emotion}: {percentage:.2f}%")

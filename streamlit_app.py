@@ -24,11 +24,23 @@ def to_model(Text):
     LABELS = ['без эмоций', 'радость', 'грусть', 'сюрприз', 'страх', 'злость']
     predicted_label, predicted_probabilities = predict(Text)
 
-    top_3_emotions = torch.argsort(predicted_probabilities, descending=True)[:3]
-    top_3_emotions_with_percentage = [(LABELS[i], predicted_probabilities[i].item() * 100) for i in top_3_emotions]
+    top_emotions = torch.argsort(predicted_probabilities, descending=True)
+    thresholds = [0.90, 0.75, 0.50, 0.25]
+    top_emotions_with_percentage = []
+    for i in top_emotions:
+        emotion = LABELS[i]
+        percentage = predicted_probabilities[i].item() * 100
+        if percentage >= thresholds[0]:
+            top_emotions_with_percentage.append((emotion, percentage))
+        elif percentage >= thresholds[1] and len(top_emotions_with_percentage) < 2:
+            top_emotions_with_percentage.append((emotion, percentage))
+        elif percentage >= thresholds[2] and len(top_emotions_with_percentage) < 3:
+            top_emotions_with_percentage.append((emotion, percentage))
+        elif percentage >= thresholds[3] and len(top_emotions_with_percentage) < 4:
+            top_emotions_with_percentage.append((emotion, percentage))
 
     st.write('Распознанные емоции:')
-    for emotion, percentage in top_3_emotions_with_percentage:
+    for emotion, percentage in top_emotions_with_percentage:
         st.write(f"{emotion}: {percentage:.2f}%")
 
 to_model(text_from_st)
