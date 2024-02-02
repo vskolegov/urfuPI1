@@ -23,7 +23,7 @@ def predict(text):
 
 def to_model(Text):
     LABELS = ['без эмоций', 'радость', 'грусть', 'сюрприз', 'страх', 'злость']
-    predicted_probabilities = predict(Text)
+    predicted_label, predicted_probabilities = predict(Text)
 
     st.write('Распознанные емоции:')
     for i, emotion in enumerate(LABELS):
