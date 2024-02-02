@@ -20,14 +20,18 @@ def predict(text):
     predicted_label = torch.argmax(predicted_probabilities).item()  # Convert to a single int value
     return predicted_label, predicted_probabilities
 
-
 def to_model(Text):
-    LABELS = ['без эмоций', 'радость', 'грусть', 'сюрприз', 'страх', 'злость']
-    predicted_label, predicted_probabilities = predict(Text)
+    try:
+        predicted_label, predicted_probabilities = predict(Text)
+        LABELS = ['без эмоций', 'радость', 'грусть', 'сюрприз', 'страх', 'злость']
+        st.write('Распознанные емоции:')
+        for i, emotion in enumerate(LABELS):
+            percentage = predicted_probabilities[i].item() * 100
+            st.write(f"{emotion}: {percentage:.2f}%")
+    except Exception as e:
+        st.error(f"An error occurred: {str(e)}")
 
-    st.write('Распознанные емоции:')
-    for i, emotion in enumerate(LABELS):
-        percentage = predicted_probabilities[i].item() * 100
-        st.write(f"{emotion}: {percentage:.2f}%")
-
-to_model(text_from_st)
+if text_from_st.strip() != "":
+    to_model(text_from_st)
+else:
+    st.warning("Пожалуйста, введите текст")
