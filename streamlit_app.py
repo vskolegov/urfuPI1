@@ -20,27 +20,15 @@ def predict(text):
     return predicted_label, predicted_probabilities
 
 
-text_input = 'Ты мне не нравишься. Я тебя не люблю'
-LABELS = ['без эмоций', 'радость', 'грусть', 'сюрприз', 'страх', 'злость']
-
-predicted_label, predicted_probabilities = predict(text_input)
-
-top_3_emotions = torch.argsort(predicted_probabilities, descending=True)[:3]
-top_3_emotions_with_percentage = [(LABELS[i], predicted_probabilities[i].item() * 100) for i in top_3_emotions]
-
-print("Распознанные емоции:")
-for emotion, percentage in top_3_emotions_with_percentage:
-    print(f"{emotion}: {percentage:.2f}%")
-
 def to_model(Text):
-    LABELS = ['no_emotion', 'joy', 'sadness', 'surprise', 'fear', 'anger']
-    predicted_label, predicted_probabilities = predict(text_input)
+    LABELS = ['без эмоций', 'радость', 'грусть', 'сюрприз', 'страх', 'злость']
+    predicted_label, predicted_probabilities = predict(Text)
 
     top_3_emotions = torch.argsort(predicted_probabilities, descending=True)[:3]
     top_3_emotions_with_percentage = [(LABELS[i], predicted_probabilities[i].item() * 100) for i in top_3_emotions]
 
-    print("Распознанные емоции:")
+    st.write('Распознанные емоции:')
     for emotion, percentage in top_3_emotions_with_percentage:
-        print(f"{emotion}: {percentage:.2f}%")
+        st.write(f"{emotion}: {percentage:.2f}%")
 
 to_model(text_from_st)
