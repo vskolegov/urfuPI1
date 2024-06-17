@@ -4,17 +4,17 @@
 
 Install the required dependencies:
 
-    ```bash
+```bash
     pip install -r requirements.txt
-    ```
+```
 
 ## Installation
 
 Run the Streamlit app:
 
-    ```bash
+```bash
     streamlit run app.py
-    ```
+```
 
 ## Usage
 
