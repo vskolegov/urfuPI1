@@ -1,5 +1,6 @@
 import torch
 from transformers import AutoModelForSequenceClassification, BertTokenizerFast
+from typing import Tuple, List
 
 # Инициализация токенизатора и модели
 tokenizer = BertTokenizerFast.from_pretrained(
@@ -16,8 +17,9 @@ if torch.cuda.is_available():
 LABELS = ['без эмоций', 'радость', 'грусть', 'сюрприз', 'страх', 'злость']
 THRESHOLDS = [0.90, 0.75, 0.50, 0.25]
 
+
 @torch.no_grad()
-def predict(text):
+def predict(text: str) -> Tuple[int, torch.Tensor]:
     """
     Предсказывает метку и вероятности для заданного текста.
 
@@ -30,7 +32,12 @@ def predict(text):
     predicted_label = torch.argmax(predicted_probabilities).item()
     return predicted_label, predicted_probabilities
 
-def get_top_emotions(predicted_probabilities, thresholds, labels):
+
+def get_top_emotions(
+    predicted_probabilities: torch.Tensor,
+    thresholds: List[float],
+    labels: List[str]
+) -> List[Tuple[str, float]]:
     """
     Получает топовые эмоции с процентами на основе вероятностей и порогов.
 
@@ -54,7 +61,8 @@ def get_top_emotions(predicted_probabilities, thresholds, labels):
             top_emotions_with_percentage.append((emotion, percentage))
     return top_emotions_with_percentage
 
-def main(text):
+
+def main(text: str) -> None:
     """
     Главная функция, выполняющая анализ текста и выводящая результаты.
 
@@ -62,10 +70,10 @@ def main(text):
     """
     predicted_label, predicted_probabilities = predict(text)
     top_emotions_with_percentage = get_top_emotions(predicted_probabilities, THRESHOLDS, LABELS)
-    
     print("Top emotions with percentages:")
     for emotion, percentage in top_emotions_with_percentage:
         print(f"{emotion}: {percentage:.2f}%")
+
 
 if __name__ == "__main__":
     text_input = 'Нифига себе, неужели так тоже бывает!'
