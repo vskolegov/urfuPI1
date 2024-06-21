@@ -1,18 +1,23 @@
 import torch
-from transformers import AutoModelForSequenceClassification
-from transformers import BertTokenizerFast
+from transformers import AutoModelForSequenceClassification, BertTokenizerFast
 
-tokenizer = BertTokenizerFast.from_pretrained('blanchefort/rubert-base-cased-sentiment-rusentiment')
-model = AutoModelForSequenceClassification.from_pretrained('blanchefort/rubert-base-cased-sentiment-rusentiment', return_dict=True)
+tokenizer = BertTokenizerFast.from_pretrained(
+    'blanchefort/rubert-base-cased-sentiment-rusentiment'
+)
+model = AutoModelForSequenceClassification.from_pretrained(
+    'blanchefort/rubert-base-cased-sentiment-rusentiment', return_dict=True
+)
+
 if torch.cuda.is_available():
-    model.cuda()  
-    
+    model.cuda()
+
+
 @torch.no_grad()
 def predict(text):
     inputs = tokenizer(text, max_length=512, padding=True, truncation=True, return_tensors='pt')
     outputs = model(**inputs)
     predicted_probabilities = torch.nn.functional.softmax(outputs.logits, dim=1).squeeze()
-    predicted_label = torch.argmax(predicted_probabilities).item()  # Convert to a single int value
+    predicted_label = torch.argmax(predicted_probabilities).item()
     return predicted_label, predicted_probabilities
 
 
@@ -24,10 +29,8 @@ LABELS = ['без эмоций', 'радость', 'грусть', 'сюрпри
 
 top_emotions = torch.argsort(predicted_probabilities, descending=True)
 
-# Define thresholds for including emotions
 thresholds = [0.90, 0.75, 0.50, 0.25]
 
-# Retrieve top emotions with percentages based on thresholds
 top_emotions_with_percentage = []
 for i in top_emotions:
     emotion = LABELS[i]
@@ -41,7 +44,6 @@ for i in top_emotions:
     elif percentage >= thresholds[3] and len(top_emotions_with_percentage) < 4:
         top_emotions_with_percentage.append((emotion, percentage))
 
-# Print the top emotions with percentages
 print("Top emotions with percentages:")
 for emotion, percentage in top_emotions_with_percentage:
     print(f"{emotion}: {percentage:.2f}%")
