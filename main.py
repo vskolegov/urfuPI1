@@ -11,6 +11,7 @@ model = AutoModelForSequenceClassification.from_pretrained(
 if torch.cuda.is_available():
     model.cuda()
 
+
 @torch.no_grad()
 def predict(text):
     inputs = tokenizer(text, max_length=512, padding=True, truncation=True, return_tensors='pt')
@@ -20,7 +21,7 @@ def predict(text):
     return predicted_label, predicted_probabilities
 
 
-text_input = 'Ого, неужели так тоже бывает!'
+text_input = 'Нифига себе, неужели так тоже бывает!'
 
 predicted_label, predicted_probabilities = predict(text_input)
 

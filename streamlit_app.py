@@ -1,10 +1,13 @@
 import torch
-from transformers import AutoModelForSequenceClassification
-from transformers import BertTokenizerFast
+from transformers import AutoModelForSequenceClassification, BertTokenizerFast
 import streamlit as st
 
-tokenizer = BertTokenizerFast.from_pretrained('blanchefort/rubert-base-cased-sentiment-rusentiment')
-model = AutoModelForSequenceClassification.from_pretrained('blanchefort/rubert-base-cased-sentiment-rusentiment', return_dict=True)
+tokenizer = BertTokenizerFast.from_pretrained(
+    'blanchefort/rubert-base-cased-sentiment-rusentiment'
+)
+model = AutoModelForSequenceClassification.from_pretrained(
+    'blanchefort/rubert-base-cased-sentiment-rusentiment', return_dict=True
+)
 
 sentiment_labels = {
     0: "без эмоций",
@@ -15,6 +18,7 @@ sentiment_labels = {
     5: "злость"
 }
 
+
 def predict(text):
     inputs = tokenizer(text, max_length=512, padding=True, truncation=True, return_tensors='pt')
     outputs = model(**inputs)
@@ -22,6 +26,7 @@ def predict(text):
     predicted_class = torch.argmax(predicted).item()
     probabilities = predicted.tolist()
     return predicted_class, probabilities
+
 
 def main():
     st.title("Анализ эмоций в тексте")
